@@ -1,6 +1,3 @@
-!
-!
-
 function LogitPower_time(mu, beta, gamma, tau2, II, JJ, KK, GQ, GQX, GQW, X_in,typeone) result (power)
     implicit none
   ! ---- arg types -----------------------
@@ -50,6 +47,20 @@ function LogitPower_time(mu, beta, gamma, tau2, II, JJ, KK, GQ, GQX, GQW, X_in,t
     ! run the algorithm
     invVar = 0.0d0
     do i=1,II
+      if(i<2) then
+        invVarPre=0
+        z0 = 0
+        do k=1, nZ
+            z1 = KK - z0
+            call der_likelihood_timelogit(mu,beta,gamma,tau2, z0, z1, X(i,:), JJ, KK, GQ, GQX, GQW, derlikelihood, prob)
+            call vectorsquare(derlikelihood, JJ+2, derlikelihood2)
+            invVar = invVar + derlikelihood2 * prob
+            invVarPre = invVarPre+derlikelihood2 * prob
+            call updatezz(z0, JJ, KK)
+        end do
+      cycle
+      end if
+
       if(i>1 .and. ALL(X(i,:).EQ. X(i-1,:))) then
       invVar = invVar + invVarPre
       !finish = updatez(z0, JJ, KK)

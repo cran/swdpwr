@@ -1,7 +1,7 @@
 Package: swdpwr
 Type: Package
 Title: Power Calculation for Stepped Wedge Cluster Randomized Trials
-Version: 1.1
+Version: 1.3
 Date: 2020-10-01
 Author: Jiachen Chen [cre, aut], Xin Zhou [aut], Fan Li [aut] and Donna Spiegelman [aut].
 Maintainer: Jiachen Chen <jiachen.chen@yale.edu>
@@ -11,6 +11,6 @@ Encoding: UTF-8
 LazyData: TRUE
 NeedsCompilation: yes
 Repository: CRAN
-Date/Publication: 2020-10-26 10:10:02 UTC
+Date/Publication: 2020-10-31 14:30:02 UTC
 RoxygenNote: 6.1.99.9001
-Packaged: 2020-10-18 15:12:27 UTC; jiachenchen
+Packaged: 2020-10-29 07:16:37 UTC; jiachenchen

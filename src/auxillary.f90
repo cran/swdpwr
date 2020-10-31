@@ -1,7 +1,3 @@
-﻿! Description:
-! random_normal: returns a normally distributed pseudo-random number with zero mean and unit variance
-!
-
 FUNCTION random_normal() RESULT (ran_norm)
 
 ! Adapted from the following Fortran 77 code

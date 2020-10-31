@@ -1,16 +1,3 @@
-!     Program:         CoxORC.f90
-!     Written by:      Xin Zhou
-!     Last modified:   Dec 26, 2015
-!     Purpose: Cox proportional hazard models with ORC
-
-!   input: X, W, omega, T0, T, delta
-!   For simplicity, assume only one covariate has measurement error
-!   X: true covariate. X is a vector
-!   W: surrogate covariates. Only the first covariate has measurement error.
-!   omega: validation indicator. If omega==1, X is availabe.
-!   T0, T: enroll time and observed time
-!   delta: event indicator
-
 function LinearPower_time(mu, beta, gamma, tau2, II, JJ, KK, a, b, &
                     mincomp, maxcomp, GQ, GQX, GQW, X_in,typeone) result (power)
     implicit none

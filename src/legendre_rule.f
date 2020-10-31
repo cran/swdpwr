@@ -913,9 +913,9 @@ c
       double precision alpha
       double precision b
       double precision beta
-      character * ( 255 ) filename
+
       integer kind
-      double precision r(2)
+
       double precision w(order)
       double precision x(order)
 
@@ -1322,7 +1322,7 @@ c
       return
       end
 
-      subroutine r8mat_write ( output_filename, m, n, table )
+      subroutine r8mat_write ( m, n )
 
 c*********************************************************************72
 c
@@ -1360,10 +1360,10 @@ c
       integer n
 
       integer j
-      character * ( * ) output_filename
+
       integer output_unit
-      character * ( 30 ) string
-      double precision table(m,n)
+
+
 c
 c  Open the file.
 c
@@ -1433,8 +1433,8 @@ c
       character * ( 255 ) filename_r
       character * ( 255 ) filename_w
       character * ( 255 ) filename_x
-      integer i
-      integer kind
+
+
       double precision r(2)
       double precision w(order)
       double precision x(order)
@@ -1456,9 +1456,9 @@ c     &  '  Abscissa file will be "' // trim ( filename_x ) // '".'
 c      write ( *, '(a)' )
 c     &  '  Region file will be   "' // trim ( filename_r ) // '".'
 
-      call r8mat_write ( filename_w, 1, order, w )
-      call r8mat_write ( filename_x, 1, order, x )
-      call r8mat_write ( filename_r, 1, 2,     r )
+      call r8mat_write ( 1, order )
+      call r8mat_write ( 1, order )
+      call r8mat_write ( 1, 2 )
 
       return
       end
@@ -2249,9 +2249,9 @@ c
       double precision alpha
       double precision b
       double precision beta
-      character * ( 255 ) filename
+
       integer kind
-      double precision r(2)
+
       double precision w(order)
       double precision x(order)
 

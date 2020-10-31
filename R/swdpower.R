@@ -112,7 +112,7 @@ swdpower<-function(K, design, family="binomial", model="conditional", link="iden
   if(family=="binomial"&&tem1<0) stop("Violation of valid probability, given input parameters: min(meanresponse_start,meanresponse_end0, meanresponse_end1)<0. Please check whether any of these values are out of range and revise one or more of them.")
   if(family=="binomial"&&tem2>1) stop("Violation of valid probability, given input parameters: max(meanresponse_start,meanresponse_end0, meanresponse_end1)>1. Please check whether any of these values are out of range and revise one or more of them.")
 
-
+  if(family=="binomial"&&model==1&&(K>150)&&(m1!=m2)) stop("K should be at least smaller than 150 for this scenario as the running time is too long with this K for the power calculation of binary outcomes under conditional model with time effects. Please reduce K or use the model without time effects or use marginal models.")
 
   dataset=design
   I=dim(dataset)[1]
@@ -194,10 +194,10 @@ swdpower<-function(K, design, family="binomial", model="conditional", link="iden
           }
           #  call computeparameter(JJ, mu, beta, gamma, tau2, p0, p11, rho0)
           #dyn.load("computeparameter.so")
-          mu=suppressWarnings(.Fortran("computeparameter",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0,package="swdpwr")$mu)
-          beta=suppressWarnings(.Fortran("computeparameter",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0,package="swdpwr")$beta)
-          gamma=suppressWarnings(.Fortran("computeparameter",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0,package="swdpwr")$gamma)
-          tau2=suppressWarnings(.Fortran("computeparameter",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0,package="swdpwr")$tau2)
+          mu=suppressWarnings(.Fortran("computeparameter",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0 )$mu)
+          beta=suppressWarnings(.Fortran("computeparameter",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0 )$beta)
+          gamma=suppressWarnings(.Fortran("computeparameter",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0 )$gamma)
+          tau2=suppressWarnings(.Fortran("computeparameter",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0 )$tau2)
 
           period=NULL
           period=gamma+mu
@@ -271,12 +271,12 @@ swdpower<-function(K, design, family="binomial", model="conditional", link="iden
           b = 1-b
           #call legendre_handle (GQ, a, b, GQX, GQW)
           ##dyn.load("legendre_rule.so")
-          GQX=suppressWarnings(.Fortran("legendrehandle",GQ=as.integer(GQ), a=as.numeric(a), b=as.numeric(b), GQX=as.numeric(GQX), GQW=as.numeric(GQW),package="swdpwr")$GQX)
-          GQW=suppressWarnings(.Fortran("legendrehandle",GQ=as.integer(GQ), a=as.numeric(a), b=as.numeric(b), GQX=as.numeric(GQX), GQW=as.numeric(GQW),package="swdpwr")$GQW)
+          GQX=suppressWarnings(.Fortran("legendrehandle",GQ=as.integer(GQ), a=as.numeric(a), b=as.numeric(b), GQX=as.numeric(GQX), GQW=as.numeric(GQW) )$GQX)
+          GQW=suppressWarnings(.Fortran("legendrehandle",GQ=as.integer(GQ), a=as.numeric(a), b=as.numeric(b), GQX=as.numeric(GQX), GQW=as.numeric(GQW) )$GQW)
           #Gaussian Legendre will not take two limits, a and b
           #power = LinearPower_time(mu, beta, gamma, tau2, II, JJ, KK, a, b, mincomp, maxcomp, GQ, GQX, GQW, X_in)
           #dyn.load("power_cal_wrapper.so")
-          power=suppressWarnings(.Fortran("LinearPowertimewrapper",mu=mu, beta, gamma=gamma, tau2=tau2, II=as.integer(II), JJ=as.integer(JJ), KK=as.integer(KK), a=as.numeric(a), b=as.numeric(b), mincomp=as.integer(mincomp), maxcomp=as.integer(maxcomp), GQ=as.integer(GQ), GQX=as.numeric(GQX), GQW=as.numeric(GQW), X_in=as.integer(X_in),typeone=as.numeric(typeone),power=power,package="swdpwr")$power)
+          power=suppressWarnings(.Fortran("LinearPowertimewrapper",mu=mu, beta, gamma=gamma, tau2=tau2, II=as.integer(II), JJ=as.integer(JJ), KK=as.integer(KK), a=as.numeric(a), b=as.numeric(b), mincomp=as.integer(mincomp), maxcomp=as.integer(maxcomp), GQ=as.integer(GQ), GQX=as.numeric(GQX), GQW=as.numeric(GQW), X_in=as.integer(X_in),typeone=as.numeric(typeone),power=power )$power)
 
         }
         else if(link<2 & link>0)
@@ -300,10 +300,10 @@ swdpower<-function(K, design, family="binomial", model="conditional", link="iden
           }
           #  call computeparameter(JJ, mu, beta, gamma, tau2, p0, p11, rho0)
           #dyn.load("computeparameterlog.so")
-          mu=suppressWarnings(.Fortran("computeparameterlog",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0,package="swdpwr")$mu)
-          beta=suppressWarnings(.Fortran("computeparameterlog",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0,package="swdpwr")$beta)
-          gamma=suppressWarnings(.Fortran("computeparameterlog",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0,package="swdpwr")$gamma)
-          tau2=suppressWarnings(.Fortran("computeparameterlog",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0,package="swdpwr")$tau2)
+          mu=suppressWarnings(.Fortran("computeparameterlog",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0 )$mu)
+          beta=suppressWarnings(.Fortran("computeparameterlog",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0 )$beta)
+          gamma=suppressWarnings(.Fortran("computeparameterlog",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0 )$gamma)
+          tau2=suppressWarnings(.Fortran("computeparameterlog",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0 )$tau2)
 
           period=NULL
           period=gamma+mu
@@ -383,13 +383,13 @@ swdpower<-function(K, design, family="binomial", model="conditional", link="iden
           #call legendre_handle (GQ, b, a, GQX, GQW)
           #!call legendre_handle2 (GQ, b, a, GQX, GQW)
           #dyn.load("legendre_rule.so")
-          GQX=suppressWarnings(.Fortran("legendrehandle",GQ=as.integer(GQ), a=b, b=a, GQX=as.numeric(GQX), GQW=as.numeric(GQW),package="swdpwr")$GQX)
-          GQW=suppressWarnings(.Fortran("legendrehandle",GQ=as.integer(GQ), a=b, b=a, GQX=as.numeric(GQX), GQW=as.numeric(GQW),package="swdpwr")$GQW)
+          GQX=suppressWarnings(.Fortran("legendrehandle",GQ=as.integer(GQ), a=b, b=a, GQX=as.numeric(GQX), GQW=as.numeric(GQW) )$GQX)
+          GQW=suppressWarnings(.Fortran("legendrehandle",GQ=as.integer(GQ), a=b, b=a, GQX=as.numeric(GQX), GQW=as.numeric(GQW) )$GQW)
 
           #Gaussian Legendre will not take two limits, a and b
           #power = LogPower_time(mu, beta, gamma, tau2, II, JJ, KK, b, a, mincomp, maxcomp, GQ, GQX, GQW, X_in)
           #dyn.load("power_cal_wrapper.so")
-          power=suppressWarnings(.Fortran("LogPowertimewrapper",mu=mu, beta=beta, gamma=gamma, tau2=tau2, II=as.integer(II), JJ=as.integer(JJ), KK=as.integer(KK), a=b, b=a, mincomp=as.integer(mincomp), maxcomp= as.integer(maxcomp), GQ=as.integer(GQ),GQX=as.numeric(GQX), GQW=as.numeric(GQW), X_in=as.integer(X_in),typeone=as.numeric(typeone),power=power,package="swdpwr")$power)
+          power=suppressWarnings(.Fortran("LogPowertimewrapper",mu=mu, beta=beta, gamma=gamma, tau2=tau2, II=as.integer(II), JJ=as.integer(JJ), KK=as.integer(KK), a=b, b=a, mincomp=as.integer(mincomp), maxcomp= as.integer(maxcomp), GQ=as.integer(GQ),GQX=as.numeric(GQX), GQW=as.numeric(GQW), X_in=as.integer(X_in),typeone=as.numeric(typeone),power=power )$power)
 
         }else
         {
@@ -398,8 +398,8 @@ swdpower<-function(K, design, family="binomial", model="conditional", link="iden
           GQW = rep(0,GQ)
           #call HERZO(GQ,GQX,GQW)
           #dyn.load("herzo.so")
-          GQW=suppressWarnings(.Fortran("HERZO",GQ=as.integer(GQ),GQX=as.numeric(GQX),GQW=as.numeric(GQX),package="swdpwr")$GQW)
-          GQX=suppressWarnings(.Fortran("HERZO",GQ=as.integer(GQ),GQX=as.numeric(GQX),GQW=as.numeric(GQX),package="swdpwr")$GQX)
+          GQW=suppressWarnings(.Fortran("HERZO",GQ=as.integer(GQ),GQX=as.numeric(GQX),GQW=as.numeric(GQX) )$GQW)
+          GQX=suppressWarnings(.Fortran("HERZO",GQ=as.integer(GQ),GQX=as.numeric(GQX),GQW=as.numeric(GQX) )$GQX)
           p01=exp(mu)/(1+exp(mu))
           p11=exp(mu+beta)/(1+exp(mu+beta))
           p0[1] = p01
@@ -421,10 +421,10 @@ swdpower<-function(K, design, family="binomial", model="conditional", link="iden
           #gamma = 0.0
           #call computeparameterlogit(JJ, mu, beta, gamma, tau2, p0, p11, rho0, GQ, GQX, GQW, convergence)
           #dyn.load("computeparameterlogit.so")
-          mu=suppressWarnings(.Fortran("computeparameterlogit",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0, GQ=as.integer(GQ), GQX=as.numeric(GQX), GQW=as.numeric(GQW), convergence=convergence,package="swdpwr")$mu)
-          beta=suppressWarnings(.Fortran("computeparameterlogit",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0, GQ=as.integer(GQ), GQX=as.numeric(GQX), GQW=as.numeric(GQW), convergence=convergence,package="swdpwr")$beta)
-          gamma=suppressWarnings(.Fortran("computeparameterlogit",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0, GQ=as.integer(GQ), GQX=as.numeric(GQX), GQW=as.numeric(GQW), convergence=convergence,package="swdpwr")$gamma)
-          tau2=suppressWarnings(.Fortran("computeparameterlogit",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0, GQ=as.integer(GQ), GQX=as.numeric(GQX), GQW=as.numeric(GQW), convergence=convergence,package="swdpwr")$tau2)
+          mu=suppressWarnings(.Fortran("computeparameterlogit",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0, GQ=as.integer(GQ), GQX=as.numeric(GQX), GQW=as.numeric(GQW), convergence=convergence)$mu)
+          beta=suppressWarnings(.Fortran("computeparameterlogit",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0, GQ=as.integer(GQ), GQX=as.numeric(GQX), GQW=as.numeric(GQW), convergence=convergence)$beta)
+          gamma=suppressWarnings(.Fortran("computeparameterlogit",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0, GQ=as.integer(GQ), GQX=as.numeric(GQX), GQW=as.numeric(GQW), convergence=convergence)$gamma)
+          tau2=suppressWarnings(.Fortran("computeparameterlogit",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0, GQ=as.integer(GQ), GQX=as.numeric(GQX), GQW=as.numeric(GQW), convergence=convergence)$tau2)
 
           period=NULL
           period=gamma+mu
@@ -457,7 +457,7 @@ swdpower<-function(K, design, family="binomial", model="conditional", link="iden
           #gamma=gammaal
           #power = LogitPower_time(mu, beta, gamma, tau2, II, JJ, KK, GQ, GQX, GQW,X_in)
           #dyn.load("power_cal_wrapper.so")
-          power=suppressWarnings(.Fortran("LogitPowertimewrapper",mu=mu, beta=beta, gamma=gamma, tau2=tau2, II=as.integer(II), JJ=as.integer(JJ), KK=as.integer(KK), GQ=as.integer(GQ), GQX=as.numeric(GQX), GQW=as.numeric(GQW), X_in=as.integer(X_in),typeone=as.numeric(typeone), power=power,package="swdpwr")$power)
+          power=suppressWarnings(.Fortran("LogitPowertimewrapper",mu=mu, beta=beta, gamma=gamma, tau2=tau2, II=as.integer(II), JJ=as.integer(JJ), KK=as.integer(KK), GQ=as.integer(GQ), GQX=as.numeric(GQX), GQW=as.numeric(GQW), X_in=as.integer(X_in),typeone=as.numeric(typeone), power=power )$power)
           if(!is.na(effectsize_beta)) beta=effectsize_beta
         }
       }
@@ -480,9 +480,9 @@ swdpower<-function(K, design, family="binomial", model="conditional", link="iden
           }
           #call computeparameter(JJ, mu, beta, gamma, tau2, p0, p11, rho0)
           #dyn.load("computeparameter.so")
-          mu=suppressWarnings(.Fortran("computeparameter",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0,package="swdpwr")$mu)
-          beta=suppressWarnings(.Fortran("computeparameter",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0,package="swdpwr")$beta)
-          tau2=suppressWarnings(.Fortran("computeparameter",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0,package="swdpwr")$tau2)
+          mu=suppressWarnings(.Fortran("computeparameter",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0 )$mu)
+          beta=suppressWarnings(.Fortran("computeparameter",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0 )$beta)
+          tau2=suppressWarnings(.Fortran("computeparameter",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0 )$tau2)
 
           period=NULL
           period[1]=mu
@@ -529,10 +529,10 @@ swdpower<-function(K, design, family="binomial", model="conditional", link="iden
           #! Gaussian Legendre will not take two limits, a and b
           #power = LinearPower_notime(mu, beta, tau2, II, JJ, KK, a, b, GQ, GQX, GQW, X_in)
           #dyn.load("legendre_rule.so")
-          GQX=suppressWarnings(.Fortran("legendrehandle",GQ=as.integer(GQ), a=a, b=b, GQX=as.numeric(GQX), GQW=as.numeric(GQW),package="swdpwr")$GQX)
-          GQW=suppressWarnings(.Fortran("legendrehandle",GQ=as.integer(GQ), a=a, b=b, GQX=as.numeric(GQX), GQW=as.numeric(GQW),package="swdpwr")$GQW)
+          GQX=suppressWarnings(.Fortran("legendrehandle",GQ=as.integer(GQ), a=a, b=b, GQX=as.numeric(GQX), GQW=as.numeric(GQW) )$GQX)
+          GQW=suppressWarnings(.Fortran("legendrehandle",GQ=as.integer(GQ), a=a, b=b, GQX=as.numeric(GQX), GQW=as.numeric(GQW) )$GQW)
           #dyn.load("power_cal_wrapper.so")
-          power=suppressWarnings(.Fortran("LinearPowernotimewrapper",mu=mu, beta=beta,  tau2=tau2, II=as.integer(II), JJ=as.integer(JJ), KK=as.integer(KK), a=a, b=b, GQ=as.integer(GQ), GQX=as.numeric(GQX), GQW=as.numeric(GQW), X_in=as.integer(X_in) ,typeone=as.numeric(typeone), power=power,package="swdpwr")$power)
+          power=suppressWarnings(.Fortran("LinearPowernotimewrapper",mu=mu, beta=beta,  tau2=tau2, II=as.integer(II), JJ=as.integer(JJ), KK=as.integer(KK), a=a, b=b, GQ=as.integer(GQ), GQX=as.numeric(GQX), GQW=as.numeric(GQW), X_in=as.integer(X_in) ,typeone=as.numeric(typeone), power=power )$power)
         }
         else if(link<2 & link>0)
         {
@@ -559,9 +559,9 @@ swdpower<-function(K, design, family="binomial", model="conditional", link="iden
 
           #call computeparameterlog(JJ, mu, beta, gamma, tau2, p0, p11, rho0)
           #dyn.load("computeparameterlog.so")
-          mu=suppressWarnings(.Fortran("computeparameterlog",JJ=as.integer(JJ),mu=mu,beta=beta,gamma=gamma,tau2=tau2,p0=p0,p11=p11, rho0=rho0,package="swdpwr")$mu)
-          beta=suppressWarnings(.Fortran("computeparameterlog",JJ=as.integer(JJ), mu=mu, beta=beta,gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0,package="swdpwr")$beta)
-          tau2=suppressWarnings(.Fortran("computeparameterlog",JJ=as.integer(JJ), mu=mu, beta=beta,gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0,package="swdpwr")$tau2)
+          mu=suppressWarnings(.Fortran("computeparameterlog",JJ=as.integer(JJ),mu=mu,beta=beta,gamma=gamma,tau2=tau2,p0=p0,p11=p11, rho0=rho0 )$mu)
+          beta=suppressWarnings(.Fortran("computeparameterlog",JJ=as.integer(JJ), mu=mu, beta=beta,gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0 )$beta)
+          tau2=suppressWarnings(.Fortran("computeparameterlog",JJ=as.integer(JJ), mu=mu, beta=beta,gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0 )$tau2)
 
           period=NULL
           period[1]=mu
@@ -613,11 +613,11 @@ swdpower<-function(K, design, family="binomial", model="conditional", link="iden
           # ! Gaussian Legendre will not take two limits, a and b
           # power = LogPower_notime(mu, beta, tau2, II, JJ, KK, b, a, GQ, GQX, GQW, X_in)
           #dyn.load("legendre_rule.so")
-          GQX=suppressWarnings(.Fortran("legendrehandle",GQ=as.integer(GQ), a=b, b=a, GQX=as.numeric(GQX), GQW=as.numeric(GQW),package="swdpwr")$GQX)
-          GQW=suppressWarnings(.Fortran("legendrehandle",GQ=as.integer(GQ), a=b, b=a, GQX=as.numeric(GQX), GQW=as.numeric(GQW),package="swdpwr")$GQW)
+          GQX=suppressWarnings(.Fortran("legendrehandle",GQ=as.integer(GQ), a=b, b=a, GQX=as.numeric(GQX), GQW=as.numeric(GQW) )$GQX)
+          GQW=suppressWarnings(.Fortran("legendrehandle",GQ=as.integer(GQ), a=b, b=a, GQX=as.numeric(GQX), GQW=as.numeric(GQW) )$GQW)
           #Gaussian Legendre will not take two limits, a and b
           #dyn.load("power_cal_wrapper.so")
-          power=suppressWarnings(.Fortran("LogPowernotimewrapper",mu=mu, beta=beta, tau2=tau2, II=as.integer(II), JJ=as.integer(JJ), KK=as.integer(KK), a=b,b=a,GQ=as.integer(GQ),GQX=as.numeric(GQX), GQW=as.numeric(GQW), X_in=as.integer(X_in) ,typeone=as.numeric(typeone), power=power,package="swdpwr")$power)
+          power=suppressWarnings(.Fortran("LogPowernotimewrapper",mu=mu, beta=beta, tau2=tau2, II=as.integer(II), JJ=as.integer(JJ), KK=as.integer(KK), a=b,b=a,GQ=as.integer(GQ),GQX=as.numeric(GQX), GQW=as.numeric(GQW), X_in=as.integer(X_in) ,typeone=as.numeric(typeone), power=power )$power)
 
         }
         else
@@ -627,8 +627,8 @@ swdpower<-function(K, design, family="binomial", model="conditional", link="iden
           GQW = rep(0,GQ)
           #call HERZO(GQ,GQX,GQW)
           #dyn.load("herzo.so")
-          GQX=suppressWarnings(.Fortran("HERZO",GQ=as.integer(GQ),GQX=as.numeric(GQX),GQW=as.numeric(GQW),package="swdpwr")$GQX)
-          GQW=suppressWarnings(.Fortran("HERZO",GQ=as.integer(GQ),GQX=as.numeric(GQX),GQW=as.numeric(GQW),package="swdpwr")$GQW)
+          GQX=suppressWarnings(.Fortran("HERZO",GQ=as.integer(GQ),GQX=as.numeric(GQX),GQW=as.numeric(GQW) )$GQX)
+          GQW=suppressWarnings(.Fortran("HERZO",GQ=as.integer(GQ),GQX=as.numeric(GQX),GQW=as.numeric(GQW) )$GQW)
           p0totalchange=0
           p01=exp(mu)/(1+exp(mu))
           p11=exp(mu+beta)/(1+exp(mu+beta))
@@ -652,9 +652,9 @@ swdpower<-function(K, design, family="binomial", model="conditional", link="iden
           #call computeparameterlogit(JJ, mu, beta, gamma, tau2, p0, p11, rho0, GQ, GQX, GQW, convergence)
           #power = LogitPower_notime(mu, beta, tau2, II, JJ, KK, GQ, GQX, GQW,X_in)
           #dyn.load("computeparameterlogit.so")
-          mu=suppressWarnings(.Fortran("computeparameterlogit",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0,GQ=as.integer(GQ), GQX=as.numeric(GQX), GQW=as.numeric(GQW), convergence=convergence,package="swdpwr")$mu)
-          beta=suppressWarnings(.Fortran("computeparameterlogit",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0,GQ=as.integer(GQ), GQX=as.numeric(GQX), GQW=as.numeric(GQW), convergence=convergence,package="swdpwr")$beta)
-          tau2=suppressWarnings(.Fortran("computeparameterlogit",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0,GQ=as.integer(GQ), GQX=as.numeric(GQX), GQW=as.numeric(GQW), convergence=convergence,package="swdpwr")$tau2)
+          mu=suppressWarnings(.Fortran("computeparameterlogit",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0,GQ=as.integer(GQ), GQX=as.numeric(GQX), GQW=as.numeric(GQW), convergence=convergence )$mu)
+          beta=suppressWarnings(.Fortran("computeparameterlogit",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0,GQ=as.integer(GQ), GQX=as.numeric(GQX), GQW=as.numeric(GQW), convergence=convergence )$beta)
+          tau2=suppressWarnings(.Fortran("computeparameterlogit",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0,GQ=as.integer(GQ), GQX=as.numeric(GQX), GQW=as.numeric(GQW), convergence=convergence )$tau2)
 
           period=NULL
           period[1]=mu
@@ -685,7 +685,7 @@ swdpower<-function(K, design, family="binomial", model="conditional", link="iden
           #mu=mual
           #beta=betaal
           #gamma=gammaal
-          power=suppressWarnings(.Fortran("LogitPowernotimewrapper",mu=mu, beta=beta, tau2=tau2, II=as.integer(II), JJ=as.integer(JJ), KK=as.integer(KK), GQ=as.integer(GQ), GQX=as.numeric(GQX), GQW=as.numeric(GQW), X_in=as.integer(X_in), typeone=as.numeric(typeone),power=power,package="swdpwr")$power)
+          power=suppressWarnings(.Fortran("LogitPowernotimewrapper",mu=mu, beta=beta, tau2=tau2, II=as.integer(II), JJ=as.integer(JJ), KK=as.integer(KK), GQ=as.integer(GQ), GQX=as.numeric(GQX), GQW=as.numeric(GQW), X_in=as.integer(X_in), typeone=as.numeric(typeone),power=power )$power)
           if(!is.na(effectsize_beta)) beta=effectsize_beta
         }
       }
@@ -729,10 +729,10 @@ swdpower<-function(K, design, family="binomial", model="conditional", link="iden
 
           #call computeparameter(JJ, mu, beta, gamma, tau2, p0, p11, rho0)
           #dyn.load("computeparameter.so")
-          mu=suppressWarnings(.Fortran("computeparameter",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0,package="swdpwr")$mu)
-          beta=suppressWarnings(.Fortran("computeparameter",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0,package="swdpwr")$beta)
-          gamma=suppressWarnings(.Fortran("computeparameter",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0,package="swdpwr")$gamma)
-          rho0=suppressWarnings(.Fortran("computeparameter",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0,package="swdpwr")$rho0)
+          mu=suppressWarnings(.Fortran("computeparameter",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0 )$mu)
+          beta=suppressWarnings(.Fortran("computeparameter",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0 )$beta)
+          gamma=suppressWarnings(.Fortran("computeparameter",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0 )$gamma)
+          rho0=suppressWarnings(.Fortran("computeparameter",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0 )$rho0)
           #power=LinearPower_GEE(mu, beta, gamma, rho0, II, JJ, KK, X_in)
           #dyn.load("power_cal_wrapper.so")
           period=NULL
@@ -762,7 +762,7 @@ swdpower<-function(K, design, family="binomial", model="conditional", link="iden
 
 
 
-          power=suppressWarnings(.Fortran("LinearPowerGEEwrapper",mu=mu, beta=beta, gamma=gamma, rho0=rho0, II=as.integer(II), JJ=as.integer(JJ), KK=as.integer(KK), X_in=as.integer(X_in),ICC0=ICC0,ICC2=ICC2,typeone=as.numeric(typeone),power=power,package="swdpwr")$power)
+          power=suppressWarnings(.Fortran("LinearPowerGEEwrapper",mu=mu, beta=beta, gamma=gamma, rho0=rho0, II=as.integer(II), JJ=as.integer(JJ), KK=as.integer(KK), X_in=as.integer(X_in),ICC0=ICC0,ICC2=ICC2,typeone=as.numeric(typeone),power=power )$power)
 
         }
         else if(link<2 & link>0)
@@ -785,10 +785,10 @@ swdpower<-function(K, design, family="binomial", model="conditional", link="iden
 
           #call computeparameterGEElog(JJ, mu, beta, gamma, tau2, p0, p11, rho0)
           #dyn.load("computeparameterGEElog.so")
-          mu=suppressWarnings(.Fortran("computeparameterGEElog",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0,package="swdpwr")$mu)
-          beta=suppressWarnings(.Fortran("computeparameterGEElog",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0,package="swdpwr")$beta)
-          gamma=suppressWarnings(.Fortran("computeparameterGEElog",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0,package="swdpwr")$gamma)
-          rho0=suppressWarnings(.Fortran("computeparameterGEElog",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0,package="swdpwr")$rho0)
+          mu=suppressWarnings(.Fortran("computeparameterGEElog",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0 )$mu)
+          beta=suppressWarnings(.Fortran("computeparameterGEElog",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0 )$beta)
+          gamma=suppressWarnings(.Fortran("computeparameterGEElog",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0 )$gamma)
+          rho0=suppressWarnings(.Fortran("computeparameterGEElog",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0 )$rho0)
           #power=LogPower_GEE(mu, beta, gamma, rho0, II, JJ, KK, X_in)
           #dyn.load("power_cal_wrapper.so")
           period=NULL
@@ -818,7 +818,7 @@ swdpower<-function(K, design, family="binomial", model="conditional", link="iden
           }
 
 
-          power=suppressWarnings(.Fortran("LogPowerGEEwrapper",mu=mu, beta=beta, gamma=gamma, rho0=rho0, II=as.integer(II), JJ=as.integer(JJ), KK=as.integer(KK), X_in=as.integer(X_in),ICC0=ICC0,ICC2=ICC2,typeone=as.numeric(typeone),power=power,package="swdpwr")$power)
+          power=suppressWarnings(.Fortran("LogPowerGEEwrapper",mu=mu, beta=beta, gamma=gamma, rho0=rho0, II=as.integer(II), JJ=as.integer(JJ), KK=as.integer(KK), X_in=as.integer(X_in),ICC0=ICC0,ICC2=ICC2,typeone=as.numeric(typeone),power=power )$power)
         }
         else
         {
@@ -838,10 +838,10 @@ swdpower<-function(K, design, family="binomial", model="conditional", link="iden
           #call computeparameterGEElogit(JJ, mu, beta, gamma, tau2, p0, p11, rho0)
           #power=LogitPower_GEE(mu, beta, gamma, rho0, II, JJ, KK, X_in)
           #dyn.load("computeparameterGEElogit.so")
-          mu=suppressWarnings(.Fortran("computeparameterGEElogit",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0,package="swdpwr")$mu)
-          beta=suppressWarnings(.Fortran("computeparameterGEElogit",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0,package="swdpwr")$beta)
-          gamma=suppressWarnings(.Fortran("computeparameterGEElogit",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0,package="swdpwr")$gamma)
-          rho=suppressWarnings(.Fortran("computeparameterGEElogit",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0,package="swdpwr")$rho0)
+          mu=suppressWarnings(.Fortran("computeparameterGEElogit",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0 )$mu)
+          beta=suppressWarnings(.Fortran("computeparameterGEElogit",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0 )$beta)
+          gamma=suppressWarnings(.Fortran("computeparameterGEElogit",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0 )$gamma)
+          rho=suppressWarnings(.Fortran("computeparameterGEElogit",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0 )$rho0)
           #dyn.load("power_cal_wrapper.so")
           period=NULL
           period=gamma+mu
@@ -869,7 +869,7 @@ swdpower<-function(K, design, family="binomial", model="conditional", link="iden
               }
           }
 
-          power=suppressWarnings(.Fortran("LogitPowerGEEwrapper",mu=mu, beta=beta, gamma=gamma, rho0=rho0, II=as.integer(II), JJ=as.integer(JJ), KK=as.integer(KK), X_in=as.integer(X_in),ICC0=ICC0,ICC2=ICC2,typeone=as.numeric(typeone),power= power,package="swdpwr")$power)
+          power=suppressWarnings(.Fortran("LogitPowerGEEwrapper",mu=mu, beta=beta, gamma=gamma, rho0=rho0, II=as.integer(II), JJ=as.integer(JJ), KK=as.integer(KK), X_in=as.integer(X_in),ICC0=ICC0,ICC2=ICC2,typeone=as.numeric(typeone),power= power )$power)
         }
       }
       else
@@ -894,10 +894,10 @@ swdpower<-function(K, design, family="binomial", model="conditional", link="iden
           #call computeparameter(JJ, mu, beta, gamma, tau2, p0, p11, rho0)
           #power=LinearPower_GEE_notime(mu, beta, gamma, rho0, II, JJ, KK, X_in)
           #dyn.load("computeparameter.so")
-          mu=suppressWarnings(.Fortran("computeparameter",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0,package="swdpwr")$mu)
-          beta=suppressWarnings(.Fortran("computeparameter",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0,package="swdpwr")$beta)
-          gamma=suppressWarnings(.Fortran("computeparameter",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0,package="swdpwr")$gamma)
-          rho0=suppressWarnings(.Fortran("computeparameter",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0,package="swdpwr")$rho0)
+          mu=suppressWarnings(.Fortran("computeparameter",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0 )$mu)
+          beta=suppressWarnings(.Fortran("computeparameter",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0 )$beta)
+          gamma=suppressWarnings(.Fortran("computeparameter",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0 )$gamma)
+          rho0=suppressWarnings(.Fortran("computeparameter",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0 )$rho0)
           #power=LinearPower_GEE(mu, beta, gamma, rho0, II, JJ, KK, X_in)
           #dyn.load("power_cal_wrapper.so")
           period=NULL
@@ -924,7 +924,7 @@ swdpower<-function(K, design, family="binomial", model="conditional", link="iden
                 if(((gmu[m]*gmu[k]+alpha2*(mmu[m])*(mmu[k])))<max(gmu[m]+gmu[k]-1,0)) stop("Correlation parameters do not satisfy the restrictions of Qaqish (2003). Please  check whether it is possible to reduce the effect size, or make adjustments to  the intraclass correlations.")#stop('((gmu[m]*gmu[k]+alpha2*(mmu[m])*(mmu[k])))<max(gmu[m]+gmu[k]-1,0)')
               }
           }
-          power=suppressWarnings(.Fortran("LinearPowerGEEnotimewrapper",mu=mu, beta=beta, gamma=gamma, rho0=rho0, II=as.integer(II), JJ=as.integer(JJ), KK=as.integer(KK), X_in=as.integer(X_in),ICC0=ICC0,ICC2=ICC2,typeone=as.numeric(typeone), power=power,package="swdpwr")$power)
+          power=suppressWarnings(.Fortran("LinearPowerGEEnotimewrapper",mu=mu, beta=beta, gamma=gamma, rho0=rho0, II=as.integer(II), JJ=as.integer(JJ), KK=as.integer(KK), X_in=as.integer(X_in),ICC0=ICC0,ICC2=ICC2,typeone=as.numeric(typeone), power=power )$power)
         }
         else if(link<2 & link>0)
         {
@@ -947,10 +947,10 @@ swdpower<-function(K, design, family="binomial", model="conditional", link="iden
           #call computeparameterGEElog(JJ, mu, beta, gamma, tau2, p0, p11, rho0)
           #power=LogPower_GEE_notime(mu, beta, gamma, rho0, II, JJ, KK, X_in)
           #dyn.load("computeparameterGEElog.so")
-          mu=suppressWarnings(.Fortran("computeparameterGEElog",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0,package="swdpwr")$mu)
-          beta=suppressWarnings(.Fortran("computeparameterGEElog",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0,package="swdpwr")$beta)
-          gamma=suppressWarnings(.Fortran("computeparameterGEElog",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0,package="swdpwr")$gamma)
-          rho0=suppressWarnings(.Fortran("computeparameterGEElog",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0,package="swdpwr")$rho0)
+          mu=suppressWarnings(.Fortran("computeparameterGEElog",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0 )$mu)
+          beta=suppressWarnings(.Fortran("computeparameterGEElog",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0 )$beta)
+          gamma=suppressWarnings(.Fortran("computeparameterGEElog",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0 )$gamma)
+          rho0=suppressWarnings(.Fortran("computeparameterGEElog",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0 )$rho0)
           #power=LogPower_GEE(mu, beta, gamma, rho0, II, JJ, KK, X_in)
           #dyn.load("power_cal_wrapper.so")
           period=NULL
@@ -978,7 +978,7 @@ swdpower<-function(K, design, family="binomial", model="conditional", link="iden
               }
           }
 
-          power=suppressWarnings(.Fortran("LogPowerGEEnotimewrapper",mu=mu, beta=beta, gamma=gamma, rho0=rho0, II=as.integer(II), JJ=as.integer(JJ), KK=as.integer(KK), X_in=as.integer(X_in),ICC0=ICC0,ICC2=ICC2,typeone=as.numeric(typeone),power=power,package="swdpwr")$power)
+          power=suppressWarnings(.Fortran("LogPowerGEEnotimewrapper",mu=mu, beta=beta, gamma=gamma, rho0=rho0, II=as.integer(II), JJ=as.integer(JJ), KK=as.integer(KK), X_in=as.integer(X_in),ICC0=ICC0,ICC2=ICC2,typeone=as.numeric(typeone),power=power )$power)
         }
         else
         {
@@ -998,10 +998,10 @@ swdpower<-function(K, design, family="binomial", model="conditional", link="iden
           #call computeparameterGEElogit(JJ, mu, beta, gamma, tau2, p0, p11, rho0)
           #power=LogitPower_GEE_notime(mu, beta, gamma, rho0, II, JJ, KK, X_in)
           #dyn.load("computeparameterGEElogit.so")
-          mu=suppressWarnings(.Fortran("computeparameterGEElogit",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0,package="swdpwr")$mu)
-          beta=suppressWarnings(.Fortran("computeparameterGEElogit",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0,package="swdpwr")$beta)
-          gamma=suppressWarnings(.Fortran("computeparameterGEElogit",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0,package="swdpwr")$gamma)
-          rho0=suppressWarnings(.Fortran("computeparameterGEElogit",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0,package="swdpwr")$rho0)
+          mu=suppressWarnings(.Fortran("computeparameterGEElogit",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0 )$mu)
+          beta=suppressWarnings(.Fortran("computeparameterGEElogit",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0 )$beta)
+          gamma=suppressWarnings(.Fortran("computeparameterGEElogit",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0 )$gamma)
+          rho0=suppressWarnings(.Fortran("computeparameterGEElogit",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0 )$rho0)
           #dyn.load("power_cal_wrapper.so")
           period=NULL
           period[1]=mu
@@ -1027,7 +1027,7 @@ swdpower<-function(K, design, family="binomial", model="conditional", link="iden
                 if(((gmu[m]*gmu[k]+alpha2*(mmu[m])*(mmu[k])))<max(gmu[m]+gmu[k]-1,0)) stop("Correlation parameters do not satisfy the restrictions of Qaqish (2003). Please  check whether it is possible to reduce the effect size, or make adjustments to  the intraclass correlations.")#stop('((gmu[m]*gmu[k]+alpha2*(mmu[m])*(mmu[k])))<max(gmu[m]+gmu[k]-1,0)')
               }
           }
-          power=suppressWarnings(.Fortran("LogitPowerGEEnotimewrapper",mu=mu, beta=beta, gamma=gamma, rho0=rho0, II=as.integer(II), JJ=as.integer(JJ), KK=as.integer(KK), X_in=as.integer(X_in),ICC0=ICC0,ICC2=ICC2,typeone=as.numeric(typeone),power=power,package="swdpwr")$power)
+          power=suppressWarnings(.Fortran("LogitPowerGEEnotimewrapper",mu=mu, beta=beta, gamma=gamma, rho0=rho0, II=as.integer(II), JJ=as.integer(JJ), KK=as.integer(KK), X_in=as.integer(X_in),ICC0=ICC0,ICC2=ICC2,typeone=as.numeric(typeone),power=power )$power)
         }
       }
     }
@@ -1058,11 +1058,11 @@ swdpower<-function(K, design, family="binomial", model="conditional", link="iden
     }
     #  call computeparameter(JJ, mu, beta, gamma, tau2, p0, p11, rho0)
     #dyn.load("computeparameter.so")
-    mu=suppressWarnings(.Fortran("computeparameter",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0,package="swdpwr")$mu)
-    beta=suppressWarnings(.Fortran("computeparameter",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0,package="swdpwr")$beta)
-    gamma=suppressWarnings(.Fortran("computeparameter",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0,package="swdpwr")$gamma)
-    tau2=suppressWarnings(.Fortran("computeparameter",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0,package="swdpwr")$tau2)
-    power=suppressWarnings(.Fortran("ContinuousPowerGEEtimewrapper",mu=mu, beta=beta, gamma=gamma,rho0=rho0, II=as.integer(II), JJ=as.integer(JJ), KK=as.integer(KK), X_in=as.integer(X_in),sigma2=sigma2,ICC0=ICC0,ICC2=ICC2,typeone=as.numeric(typeone),power=power,package="swdpwr")$power)
+    mu=suppressWarnings(.Fortran("computeparameter",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0 )$mu)
+    beta=suppressWarnings(.Fortran("computeparameter",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0 )$beta)
+    gamma=suppressWarnings(.Fortran("computeparameter",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0 )$gamma)
+    tau2=suppressWarnings(.Fortran("computeparameter",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0 )$tau2)
+    power=suppressWarnings(.Fortran("ContinuousPowerGEEtimewrapper",mu=mu, beta=beta, gamma=gamma,rho0=rho0, II=as.integer(II), JJ=as.integer(JJ), KK=as.integer(KK), X_in=as.integer(X_in),sigma2=sigma2,ICC0=ICC0,ICC2=ICC2,typeone=as.numeric(typeone),power=power )$power)
     }
     else
     { p01=mu
@@ -1076,11 +1076,11 @@ swdpower<-function(K, design, family="binomial", model="conditional", link="iden
     }
     #  call computeparameter(JJ, mu, beta, gamma, tau2, p0, p11, rho0)
     #dyn.load("computeparameter.so")
-    mu=suppressWarnings(.Fortran("computeparameter",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0,package="swdpwr")$mu)
-    beta=suppressWarnings(.Fortran("computeparameter",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0,package="swdpwr")$beta)
-    gamma=suppressWarnings(.Fortran("computeparameter",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0,package="swdpwr")$gamma)
-    tau2=suppressWarnings(.Fortran("computeparameter",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0,package="swdpwr")$tau2)
-    power=suppressWarnings(.Fortran("ContinuousPowerGEEnotimewrapper",mu=mu, beta=beta, gamma=gamma,rho0=rho0, II=as.integer(II), JJ=as.integer(JJ), KK=as.integer(KK), X_in=as.integer(X_in),sigma2=sigma2,ICC0=ICC0,ICC2=ICC2,typeone=as.numeric(typeone),power=power,package="swdpwr")$power)
+    mu=suppressWarnings(.Fortran("computeparameter",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0 )$mu)
+    beta=suppressWarnings(.Fortran("computeparameter",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0 )$beta)
+    gamma=suppressWarnings(.Fortran("computeparameter",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0 )$gamma)
+    tau2=suppressWarnings(.Fortran("computeparameter",JJ=as.integer(JJ), mu=mu, beta=beta, gamma=gamma, tau2=tau2, p0=p0, p11=p11, rho0=rho0 )$tau2)
+    power=suppressWarnings(.Fortran("ContinuousPowerGEEnotimewrapper",mu=mu, beta=beta, gamma=gamma,rho0=rho0, II=as.integer(II), JJ=as.integer(JJ), KK=as.integer(KK), X_in=as.integer(X_in),sigma2=sigma2,ICC0=ICC0,ICC2=ICC2,typeone=as.numeric(typeone),power=power )$power)
     }
   }
   #summary
