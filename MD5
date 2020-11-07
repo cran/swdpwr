@@ -1,8 +1,8 @@
-b7c41520fd1c12e476badce94bc9c2b6 *DESCRIPTION
+0efc73320917597ee480c438152d43e9 *DESCRIPTION
 bbe911606ee4cf1d6bbb8003a06149b4 *NAMESPACE
-ff16bd6c73d72255375b6e1ca442b0e1 *R/swdpower.R
+684c79a1a8fea5fd62fd706771b85f19 *R/swdpower.R
 7049730d79dc3e33bbcd26f3372ed4bf *man/swdpower.Rd
-29eeb4d4d544a3c01679ba0a22de1ee7 *man/swdpwr-package.Rd
+11741cdf69cc4bc0724a2c83346e3e75 *man/swdpwr-package.Rd
 f55d66bf5483d2fdf7c5b226e4131dcd *src/GEElinear.f90
 03a06e3e257d5f4afcf5baa80046160f *src/GEElinear_notime.f90
 ce532748ce4045a5020bcb8b7f87f8ee *src/GEElog.f90

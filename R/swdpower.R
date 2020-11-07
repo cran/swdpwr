@@ -1041,7 +1041,7 @@ swdpower<-function(K, design, family="binomial", model="conditional", link="iden
     lambda3 = 1 + (KK-1)*(alpha0 - alpha1) - alpha2
     lambda4 = 1 + (KK-1)*alpha0 + (JJ-1)*(KK-1)*alpha1 + (JJ-1)*alpha2
     temp2=c(lambda1,lambda2,lambda3,lambda4)
-    if(min(temp2)<0) stop('Correlation matrix R is no longer positive definite. Please check whether the inter-period correlation is unrealistically larger than the within-period correlation or the within-individual correlation.')
+    if(min(temp2)<0) stop('Correlation matrix R is no longer positive definite. Please check whether the between-period correlation is unrealistically larger than the within-period correlation or the within-individual correlation.')
     # if(ICC1>ICC0)  stop('ICC1>ICC0')
 
 
@@ -1099,7 +1099,7 @@ swdpower<-function(K, design, family="binomial", model="conditional", link="iden
 
   if(response>1.5) {
     summary=matrix(data=c(I,J,K,SS,type,family,md,lf,round(mu,3),round(beta,3),round(gamma[J],3),ICC0,ICC1,ICC2,alpha,round(power,3)),ncol=1)
-    rownames(summary)=c("I","J","K","total sample size","study type","family of outcomes","model","link","baseline effect mu","treatment effect beta","time effect gamma_J","alpha0","alpha1","alpha2","Type I error","Power")
+    rownames(summary)=c("I","J","K","total sample size","study type","family of outcomes","model","link","baseline mu","treatment effect beta","time effect gamma_J","alpha0","alpha1","alpha2","Type I error","Power")
     design_matrix=dataset
     list_data =list(design_matrix,summary)
     names(list_data)=c("design matrix dataset, row-cluster col-time","Summary")
