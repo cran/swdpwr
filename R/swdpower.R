@@ -15,7 +15,7 @@
 #' @param alpha0 within-period correlation, with default value of 0.1
 #' @param alpha1 between-period correlation, with default value of alpha0/2
 #' @param alpha2 within-individual correlation, should not be an input under cross-sectional designs although it is numerically identical to alpha1 in this scenario by definition
-#' @return The object returned is a list, which includes the design matrix and a summary table of this design (including the power)
+#' @return The object returned has a class of \code{swdpower}, which includes a list of the design matrix and a summary of this design (including the power)
 #' @examples
 #' library(swdpwr)
 #' #a cross-sectional design with 12 clusters, 3 periods and binary outcomes applying conditional model
@@ -86,6 +86,7 @@ swdpower<-function(K, design, family="binomial", model="conditional", link="iden
     if(model=="marginal") {model=2} else
     {stop("Wrong input of class for models.")}
   if(type=="cohort"&&is.na(ICC2)==1) stop("ICC2 should be specified for cohort study")
+  if(family=="gaussian"&&sigma2==0) warning("The marginal variance sigma2 should be specified for continuous outcomes")
 
   if(!is.na(meanresponse_start)&&!is.na(meanresponse_end0)&&!is.na(meanresponse_end1)&&!is.na(effectsize_beta)) stop("Don't specify all of meanresponse_start, meanresponse_end0, meanresponse_end1, effectsize_beta at the same time. Only two ways of parameter specification are allowed: 1)specify: meanresponse_start, meanresponse_end0, meanresponse_end1; 2)specify: meanresponse_start, meanresponse_end0, effectsize_beta.")
   if(family=="gaussian"&&!is.na(effectsize_beta)&&!is.na(meanresponse_end1-meanresponse_end0)&&((meanresponse_end1-meanresponse_end0)!=effectsize_beta)) {stop("The effect size has contradictive input as meanresponse_end1-meanresponse_end0 is not equal to effectsize_beta.")}
@@ -1089,20 +1090,23 @@ swdpower<-function(K, design, family="binomial", model="conditional", link="iden
   else SS=II*KK*JJ
 
   if(response<1.5) {
-    summary=matrix(data=c(I,J,K,SS,type,family,md,lf,round(beta,3),round(gamma[J],3),sigma2,ICC0,ICC1,ICC2,alpha,round(power,3)),ncol=1)
-    rownames(summary)=c("I","J","K","total sample size","study type","family of outcomes","model","link","treatment effect beta","time effect gamma_J","marginal variance","alpha0","alpha1","alpha2","Type I error","Power")
-    design_matrix=dataset
-    list_data =list(design_matrix,summary)
-    names(list_data)=c("design matrix dataset, row-cluster col-time","Summary")
+   #summary=matrix(data=c(I,J,K,SS,type,family,md,lf,round(beta,3),round(gamma[J],3),sigma2,ICC0,ICC1,ICC2,alpha,round(power,3)),ncol=1)
+   #rownames(summary)=c("I","J","K","total sample size","study type","family of outcomes","model","link","treatment effect beta","time effect gamma_J","marginal variance","alpha0","alpha1","alpha2","Type I error","Power")
+    #design_matrix=dataset
+    list_data =list(design_matrix=dataset,I=I,J=J,K=K,total.sample.size=SS,study.type=type,family.of.outcomes=family,model=md,link=lf,treatment.effect.beta=round(beta,3),time.effect.gamma.J=round(gamma[J],3),marginal.variance=sigma2,alpha0=ICC0,alpha1=ICC1,alpha2=ICC2,Type.I.error=alpha,Power=round(power,3))
+    #names(list_data)=c("design matrix dataset, row-cluster col-time","Summary")
+    class(list_data)="swdpower"
     return(list_data)
   }
 
   if(response>1.5) {
-    summary=matrix(data=c(I,J,K,SS,type,family,md,lf,round(mu,3),round(beta,3),round(gamma[J],3),ICC0,ICC1,ICC2,alpha,round(power,3)),ncol=1)
-    rownames(summary)=c("I","J","K","total sample size","study type","family of outcomes","model","link","baseline mu","treatment effect beta","time effect gamma_J","alpha0","alpha1","alpha2","Type I error","Power")
-    design_matrix=dataset
-    list_data =list(design_matrix,summary)
-    names(list_data)=c("design matrix dataset, row-cluster col-time","Summary")
+    #summary=matrix(data=c(I,J,K,SS,type,family,md,lf,round(mu,3),round(beta,3),round(gamma[J],3),ICC0,ICC1,ICC2,alpha,round(power,3)),ncol=1)
+    #rownames(summary)=c("I","J","K","total sample size","study type","family of outcomes","model","link","baseline mu","treatment effect beta","time effect gamma_J","alpha0","alpha1","alpha2","Type I error","Power")
+    #design_matrix=dataset
+    list_data =list(design_matrix=dataset,I=I,J=J,K=K,total.sample.size=SS,study.type=type,family.of.outcomes=family,model=md,link=lf,baseline.mu=round(mu,3),treatment.effect.beta=round(beta,3),time.effect.gamma.J=round(gamma[J],3),alpha0=ICC0,alpha1=ICC1,alpha2=ICC2,Type.I.error=alpha,Power=round(power,3))
+    #list_data =list(design_matrix,summary)
+   #?/names(list_data)=c("design matrix dataset, row-cluster col-time","Summary")
+    class(list_data)="swdpower"
     return(list_data)
   }
 

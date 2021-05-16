@@ -5,7 +5,7 @@ C       ========================================================
 C       Purpose : Compute the zeros of Hermite polynomial Ln(x)
 C                 in R, and the corresponding
 C                 weighting coefficients for Gauss-Hermite
-C                 integration
+C                 integration by Shanjie Zhang, Jianming Jin.
 C       Input :   n    --- Order of the Hermite polynomial
 C                 X(n) --- Zeros of the Hermite polynomial
 C                 W(n) --- Corresponding weighting coefficients

@@ -54,7 +54,7 @@ swdpower(
 \item{alpha2}{within-individual correlation, should not be an input under cross-sectional designs although it is numerically identical to alpha1 in this scenario by definition}
 }
 \value{
-The object returned is a list, which includes the design matrix and a summary table of this design (including the power)
+The object returned has a class of \code{swdpower}, which includes a list of the design matrix and a summary of this design (including the power)
 }
 \description{
 This function performs power calculations for stepped wedge cluster randomized trials under different scenarios.

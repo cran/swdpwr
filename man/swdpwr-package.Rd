@@ -12,8 +12,8 @@ This package includes a function \code{swdpower} that accounts for power calcula
 \tabular{ll}{
 Package: \tab swdpwr\cr
 Type: \tab Package\cr
-Version: \tab 1.4\cr
-Date: \tab 2020-11-01\cr
+Version: \tab 1.5\cr
+Date: \tab 2021-04-02\cr
 License: \tab GPL (version 3)\cr
 }
 Previous literature and developement of software focused mainly on continuous outcomes and obtained approximation results for binary outcomes. This package implemented new methods of power calculation for stepped wedge designs with binary outcomes and also incorporated procedures for continuous outcomes. The function \code{swdpower} can accommodate both cross-sectional and cohort settings by specifying three levels of correlation parameters, and includes scenarios under both conditional method (mixed effect model) and marginal method (GEE), different link functions (identity, log, logit links), with or without time effect, etc. With this package, investigators can obtain more accurate calculation of statistical power, that will help a lot in the design and analysis of stepped wedge cluster randomized trials. Other supplementary documents can be found at: https://publichealth.yale.edu/cmips/research/software/swdpwr/. The Shiny app for swdpwr can be accessed at: <https://jiachenchen322.shinyapps.io/swdpwr_shinyapp/>.
