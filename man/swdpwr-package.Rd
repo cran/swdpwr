@@ -16,14 +16,14 @@ Version: \tab 1.5\cr
 Date: \tab 2021-04-02\cr
 License: \tab GPL (version 3)\cr
 }
-Previous literature and developement of software focused mainly on continuous outcomes and obtained approximation results for binary outcomes. This package implemented new methods of power calculation for stepped wedge designs with binary outcomes and also incorporated procedures for continuous outcomes. The function \code{swdpower} can accommodate both cross-sectional and cohort settings by specifying three levels of correlation parameters, and includes scenarios under both conditional method (mixed effect model) and marginal method (GEE), different link functions (identity, log, logit links), with or without time effect, etc. With this package, investigators can obtain more accurate calculation of statistical power, that will help a lot in the design and analysis of stepped wedge cluster randomized trials. Other supplementary documents can be found at: https://publichealth.yale.edu/cmips/research/software/swdpwr/. The Shiny app for swdpwr can be accessed at: <https://jiachenchen322.shinyapps.io/swdpwr_shinyapp/>.
+Previous literature and developement of software focused mainly on continuous outcomes and obtained approximation results for binary outcomes. This package implemented new methods of power calculation for stepped wedge designs with binary outcomes and also incorporated procedures for continuous outcomes. The function \code{swdpower} can accommodate both cross-sectional and cohort designs, binary and continuous outcomes, marginal (GEE) and conditional models (mixed effects model), three link functions (identity, log, logit links), with and without time effects under exchangeable, nested exchangeable and block exchangeable correlation structures. Unequal numbers of clusters per sequence are also allowed. With this package, investigators can obtain more accurate calculation of statistical power, that will help a lot in the design and analysis of stepped wedge cluster randomized trials. The package also includes functions that perform calculations for the intra-cluster correlation coefficients based on the random effects variances as input variables for continuous and binary outcomes, respectively. Other supplementary documents can be found at: https://ysph.yale.edu/cmips/research/software/swdpwr/. The Shiny app for swdpwr can be accessed at: <https://jiachenchen322.shinyapps.io/swdpwr_shinyapp/>.
 
 %~~ An overview of how to use the package, including the most important functions ~~
 }
 \author{
 Jiachen Chen, Xin Zhou , Fan Li and Donna Spiegelman.
 
-Maintainer:Jiachen Chen <jiachen.chen@yale.edu>
+Maintainer:Jiachen Chen <jiachen.chen322@gmail.com>
 }
 \references{
 Zhou X, Liao X, Kunz L M, et al. A maximum likelihood approach to power calculations for stepped wedge designs of binary outcomes[J]. Biostatistics, 2020, 21(1): 102-121.

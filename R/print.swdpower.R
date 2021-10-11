@@ -16,5 +16,5 @@ cat('This',study, "study has total sample size of", sampesize, "\n")
 power<-paste(x$Power,collapse = ', ')
 beta<-paste(x$treatment.effect.beta,collapse = ',')
 error<-paste(x$Type.I.error,collapse = ',')
-cat('Power for this scenario is',power, "for the alternative hypothesis treatment effect beta =",beta, "( Type I error = ",error, ") \n")
+cat('Power for this scenario is',power, "for the alternative hypothesis treatment effect beta =",beta, "(two-sided Type I error = ",error, ") \n")
 }

@@ -1,14 +1,14 @@
 #' A function of power calculation for Stepped Wedge Design Studies
 #' @description This function performs power calculations for stepped wedge cluster randomized trials under different scenarios.
-#' @param K number of participants at each time period in a cluster
-#' @param design I*J dimensional data set that describes the study design (control 0, intervention 1), I is the number of clusters, J is the number of time periods
+#' @param K number of participants at each time period in a cluster, specified as the average clusterperiod size considering cluster-size variability
+#' @param design I*J dimensional data set that describes the study design (control 0, intervention 1), I is the number of clusters, J is the number of time periods. Unequal allocation of sequences and only complete designs with no transition periods are allowed
 #' @param family family of responses, specify family="gaussian" for continuous outcome and family="binomial" for binary outcome, with default value of "binomial"
 #' @param model choose from conditional model (model="conditional") and marginal model (model="marginal"), with default value of applying conditional model
 #' @param link choose link function from link="identity", link="log" and link="logit", with default value of identity link
 #' @param type choose the study type, specify type="cohort" for closed cohort study and type="cross-sectional" for cross-sectional study, with default value of cross-sectional study
-#' @param meanresponse_start the anticipated mean response rate in the control group at the start of the study
-#' @param meanresponse_end0 the anticipated mean response rate in the control group at the end of the study, with default value equals to meanresponse_start (no time effects)
-#' @param meanresponse_end1 the anticipated mean response rate in the intervention group at the end of the study
+#' @param meanresponse_start the anticipated mean response in the control group at the start of the study
+#' @param meanresponse_end0 the anticipated mean response in the control group at the end of the study, with default value equals to meanresponse_start (no time effects)
+#' @param meanresponse_end1 the anticipated mean response in the intervention group at the end of the study
 #' @param effectsize_beta the anticipated effect size, just omit this parameter if you don't need to specify it. In all scenarios, you can choose to specify the three parameters about mean responses without specifying this effect size, or alternatively specify meanresponse_start, meanresponse_end0 and this effect size. For continuous outcomes, users can conduct power calculations by only specifying this parameter without the above three parameters about mean responses (as the power is dependent just on it), then calculation will be implemented assuming scenarios without time effects. If you would consider scenarios with time effects and continuous outcomes, please specify meanresponse_start, meanresponse_end0 (donot require accurate information, just make sure they are not equal) and this effectsize_beta.
 #' @param sigma2 marginal variance of the outcome (only needed for continuous outcomes and should not be an input for binary outcomes), with default value of 0.
 #' @param typeIerror two-sided type I error, with default value of 0.05
@@ -168,8 +168,8 @@ swdpower<-function(K, design, family="binomial", model="conditional", link="iden
   temp1=c(ICC0,ICC1,ICC2)
   if(min(temp1)<0) stop('Violate range of intraclass correlations: min(alpha0,alpha1,alpha2)<0.Please correct the values of correlation parameters, they must be between 0 and 1.')
 
-  if(typeone>1) stop("Type I error provided is larger than 1, it must be between 0 and 1, and is usually 0.05.")
-  if(typeone<0) stop("Type I error provided is less than 0, it must be between 0 and 1, and is usually 0.05.")
+  if(typeone>1) stop("Two-sided Type I error provided is larger than 1, it must be between 0 and 1, and is usually 0.05.")
+  if(typeone<0) stop("Two-sided Type I error provided is less than 0, it must be between 0 and 1, and is usually 0.05.")
   alpha0= ICC0
   alpha1= rho0
   alpha2= ICC2
@@ -1091,7 +1091,7 @@ swdpower<-function(K, design, family="binomial", model="conditional", link="iden
 
   if(response<1.5) {
    #summary=matrix(data=c(I,J,K,SS,type,family,md,lf,round(beta,3),round(gamma[J],3),sigma2,ICC0,ICC1,ICC2,alpha,round(power,3)),ncol=1)
-   #rownames(summary)=c("I","J","K","total sample size","study type","family of outcomes","model","link","treatment effect beta","time effect gamma_J","marginal variance","alpha0","alpha1","alpha2","Type I error","Power")
+   #rownames(summary)=c("I","J","K","total sample size","study type","family of outcomes","model","link","treatment effect beta","time effect gamma_J","marginal variance","alpha0","alpha1","alpha2","two-sided Type I error","Power")
     #design_matrix=dataset
     list_data =list(design_matrix=dataset,I=I,J=J,K=K,total.sample.size=SS,study.type=type,family.of.outcomes=family,model=md,link=lf,treatment.effect.beta=round(beta,3),time.effect.gamma.J=round(gamma[J],3),marginal.variance=sigma2,alpha0=ICC0,alpha1=ICC1,alpha2=ICC2,Type.I.error=alpha,Power=round(power,3))
     #names(list_data)=c("design matrix dataset, row-cluster col-time","Summary")
@@ -1101,7 +1101,7 @@ swdpower<-function(K, design, family="binomial", model="conditional", link="iden
 
   if(response>1.5) {
     #summary=matrix(data=c(I,J,K,SS,type,family,md,lf,round(mu,3),round(beta,3),round(gamma[J],3),ICC0,ICC1,ICC2,alpha,round(power,3)),ncol=1)
-    #rownames(summary)=c("I","J","K","total sample size","study type","family of outcomes","model","link","baseline mu","treatment effect beta","time effect gamma_J","alpha0","alpha1","alpha2","Type I error","Power")
+    #rownames(summary)=c("I","J","K","total sample size","study type","family of outcomes","model","link","baseline mu","treatment effect beta","time effect gamma_J","alpha0","alpha1","alpha2","two-sided Type I error","Power")
     #design_matrix=dataset
     list_data =list(design_matrix=dataset,I=I,J=J,K=K,total.sample.size=SS,study.type=type,family.of.outcomes=family,model=md,link=lf,baseline.mu=round(mu,3),treatment.effect.beta=round(beta,3),time.effect.gamma.J=round(gamma[J],3),alpha0=ICC0,alpha1=ICC1,alpha2=ICC2,Type.I.error=alpha,Power=round(power,3))
     #list_data =list(design_matrix,summary)

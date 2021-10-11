@@ -23,9 +23,9 @@ swdpower(
 )
 }
 \arguments{
-\item{K}{number of participants at each time period in a cluster}
+\item{K}{number of participants at each time period in a cluster, specified as the average clusterperiod size considering cluster-size variability}
 
-\item{design}{I*J dimensional data set that describes the study design (control 0, intervention 1), I is the number of clusters, J is the number of time periods}
+\item{design}{I*J dimensional data set that describes the study design (control 0, intervention 1), I is the number of clusters, J is the number of time periods. Unequal allocation of sequences and only complete designs with no transition periods are allowed}
 
 \item{family}{family of responses, specify family="gaussian" for continuous outcome and family="binomial" for binary outcome, with default value of "binomial"}
 
@@ -35,11 +35,11 @@ swdpower(
 
 \item{type}{choose the study type, specify type="cohort" for closed cohort study and type="cross-sectional" for cross-sectional study, with default value of cross-sectional study}
 
-\item{meanresponse_start}{the anticipated mean response rate in the control group at the start of the study}
+\item{meanresponse_start}{the anticipated mean response in the control group at the start of the study}
 
-\item{meanresponse_end0}{the anticipated mean response rate in the control group at the end of the study, with default value equals to meanresponse_start (no time effects)}
+\item{meanresponse_end0}{the anticipated mean response in the control group at the end of the study, with default value equals to meanresponse_start (no time effects)}
 
-\item{meanresponse_end1}{the anticipated mean response rate in the intervention group at the end of the study}
+\item{meanresponse_end1}{the anticipated mean response in the intervention group at the end of the study}
 
 \item{effectsize_beta}{the anticipated effect size, just omit this parameter if you don't need to specify it. In all scenarios, you can choose to specify the three parameters about mean responses without specifying this effect size, or alternatively specify meanresponse_start, meanresponse_end0 and this effect size. For continuous outcomes, users can conduct power calculations by only specifying this parameter without the above three parameters about mean responses (as the power is dependent just on it), then calculation will be implemented assuming scenarios without time effects. If you would consider scenarios with time effects and continuous outcomes, please specify meanresponse_start, meanresponse_end0 (donot require accurate information, just make sure they are not equal) and this effectsize_beta.}
 
