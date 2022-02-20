@@ -9,7 +9,7 @@
 #' @examples
 #' BinICC(link="identity",meanresponse_start=0.2,tau2=0.05)
 #'
-#' @import spatstat.core
+#' @import spatstat.random
 #'
 #' @export
 #'
