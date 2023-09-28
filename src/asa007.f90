@@ -66,26 +66,26 @@ subroutine cholesky ( a, n, nn, u, nullty, ifault )
 !
   implicit none
 
-  integer ( kind = 4 ) nn
+  integer nn
 
-  real ( kind = 8 ) a(nn)
-  real ( kind = 8 ), parameter :: eta = 1.0D-09
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) icol
-  integer ( kind = 4 ) ifault
-  integer ( kind = 4 ) ii
-  integer ( kind = 4 ) irow
-  integer ( kind = 4 ) j
-  integer ( kind = 4 ) k
-  integer ( kind = 4 ) kk
-  integer ( kind = 4 ) l
-  integer ( kind = 4 ) m
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ) nullty
-!  real ( kind = 8 ) rsq
-  real ( kind = 8 ) u(nn)
-  real ( kind = 8 ) w
-  real ( kind = 8 ) x
+  double precision a(nn)
+  double precision, parameter :: eta = 1.0D-09
+  integer i
+  integer icol
+  integer ifault
+  integer ii
+  integer irow
+  integer j
+  integer k
+  integer kk
+  integer l
+  integer m
+  integer n
+  integer nullty
+!  double precision rsq
+  double precision u(nn)
+  double precision w
+  double precision x
 
   ifault = 0
   nullty = 0
@@ -227,25 +227,24 @@ subroutine cholesky ( a, n, nn, u, nullty, ifault )
 !
   implicit none
 
-  integer ( kind = 4 ) n
+  integer n
+  double precision a(n*(n+1)/2), c(n*(n+1)/2)
 
-  real ( kind = 8 ) a((n*(n+1))/2)
-  real ( kind = 8 ) c((n*(n+1))/2)
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) icol
-  integer ( kind = 4 ) ifault
-  integer ( kind = 4 ) irow
-  integer ( kind = 4 ) j
-  integer ( kind = 4 ) jcol
-  integer ( kind = 4 ) k
-  integer ( kind = 4 ) l
-  integer ( kind = 4 ) mdiag
-  integer ( kind = 4 ) ndiag
-  integer ( kind = 4 ) nn
-  integer ( kind = 4 ) nrow
-  integer ( kind = 4 ) nullty
-  real ( kind = 8 ) w(n)
-  real ( kind = 8 ) x
+  integer i
+  integer icol
+  integer ifault
+  integer irow
+  integer j
+  integer jcol
+  integer k
+  integer l
+  integer mdiag
+  integer ndiag
+  integer nn
+  integer nrow
+  integer nullty
+  double precision w(n)
+  double precision x
 
   ifault = 0
 
@@ -345,84 +344,6 @@ subroutine cholesky ( a, n, nn, u, nullty, ifault )
     end if
 
   end do
-
-  return
-end
-subroutine timestamp ( )
-
-!*****************************************************************************80
-!
-!! TIMESTAMP prints the current YMDHMS date as a time stamp.
-!
-!  Example:
-!
-!    31 May 2001   9:45:54.872 AM
-!
-!  Licensing:
-!
-!    This code is distributed under the GNU LGPL license.
-!
-!  Modified:
-!
-!    18 May 2013
-!
-!  Author:
-!
-!    John Burkardt
-!
-!  Parameters:
-!
-!    None
-!
-  implicit none
-
-  character ( len = 8 ) ampm
-  integer ( kind = 4 ) d
-  integer ( kind = 4 ) h
-  integer ( kind = 4 ) m
-  integer ( kind = 4 ) mm
-  character ( len = 9 ), parameter, dimension(12) :: month = (/ &
-    'January  ', 'February ', 'March    ', 'April    ', &
-    'May      ', 'June     ', 'July     ', 'August   ', &
-    'September', 'October  ', 'November ', 'December ' /)
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ) s
-  integer ( kind = 4 ) values(8)
-  integer ( kind = 4 ) y
-
-  call date_and_time ( values = values )
-
-  y = values(1)
-  m = values(2)
-  d = values(3)
-  h = values(5)
-  n = values(6)
-  s = values(7)
-  mm = values(8)
-
-  if ( h < 12 ) then
-    ampm = 'AM'
-  else if ( h == 12 ) then
-    if ( n == 0 .and. s == 0 ) then
-      ampm = 'Noon'
-    else
-      ampm = 'PM'
-    end if
-  else
-    h = h - 12
-    if ( h < 12 ) then
-      ampm = 'PM'
-    else if ( h == 12 ) then
-      if ( n == 0 .and. s == 0 ) then
-        ampm = 'Midnight'
-      else
-        ampm = 'AM'
-      end if
-    end if
-  end if
-
-  !write ( *, '(i2,1x,a,1x,i4,2x,i2,a1,i2.2,a1,i2.2,a1,i3.3,1x,a)' ) &
-  !  d, trim ( month(m) ), y, h, ':', n, ':', s, '.', mm, trim ( ampm )
 
   return
 end
