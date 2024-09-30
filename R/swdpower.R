@@ -1,5 +1,5 @@
 #' A function of power calculation for Stepped Wedge Design Studies
-#' @description This function performs power calculations for stepped wedge cluster randomized trials under different scenarios.
+#' @description This function performs power calculations for stepped wedge cluster randomized trials under different scenarios. The default setting assumes no time effect; please refer to the documentation for guidance on incorporating time effects.
 #' @param K number of participants at each time period in a cluster, specified as the average clusterperiod size considering cluster-size variability
 #' @param design I*J dimensional data set that describes the study design (control 0, intervention 1), I is the number of clusters, J is the number of time periods. Unequal allocation of sequences and only complete designs with no transition periods are allowed
 #' @param family family of responses, specify family="gaussian" for continuous outcome and family="binomial" for binary outcome, with default value of "binomial"
@@ -41,9 +41,16 @@
 #' #0 means control status, 1 means intervention status
 #' dataset = matrix(c(rep(c(0,1,1),4),rep(c(0,0,1),4)),8,3, byrow=TRUE)
 #'
-#' #specify meanresponse_start, meanresponse_end0 and meanresponse_end1
+#' #specify meanresponse_start, meanresponse_end0 and meanresponse_end1 assuming time effects
 #' swdpower(K = 24, design = dataset, family = "gaussian", model = "marginal", link = "identity",
 #' type = "cohort", meanresponse_start = 0.1, meanresponse_end0 = 0.2,  meanresponse_end1 = 0.4,
+#' sigma2 = 0.095, typeIerror = 0.05, alpha0 = 0.03, alpha1 = 0.015, alpha2 = 0.2)
+#'
+#' #specify meanresponse_start, meanresponse_end0 and effectsize_beta assuming time effects.
+#' #As an alternative to the previous example, the time effect specification for meanresponse_start
+#' #and meanresponse_end0 does not need to be precise (make sure they are not equal).
+#' swdpower(K = 24, design = dataset, family = "gaussian", model = "marginal", link = "identity",
+#' type = "cohort", meanresponse_start = 0.1, meanresponse_end0 = 0.2,  effectsize_beta=0.2,
 #' sigma2 = 0.095, typeIerror = 0.05, alpha0 = 0.03, alpha1 = 0.015, alpha2 = 0.2)
 #'
 #' #specify effectsize_beta only, then the program runs assuming no time effects
