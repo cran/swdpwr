@@ -37,7 +37,7 @@ swdpower(
 
 \item{meanresponse_start}{the anticipated mean response in the control group at the start of the study}
 
-\item{meanresponse_end0}{the anticipated mean response in the control group at the end of the study, with default value equals to meanresponse_start (no time effects)}
+\item{meanresponse_end0}{the anticipated mean response in the control group at the end of the study, with default value equals to meanresponse_start (no time effects). To include time effects in your model, set meanresponse_start and meanresponse_end0 to different values.}
 
 \item{meanresponse_end1}{the anticipated mean response in the intervention group at the end of the study}
 
@@ -57,7 +57,7 @@ swdpower(
 The object returned has a class of \code{swdpower}, which includes a list of the design matrix and a summary of this design (including the power)
 }
 \description{
-This function performs power calculations for stepped wedge cluster randomized trials under different scenarios. The default setting assumes no time effect; please refer to the documentation for guidance on incorporating time effects.
+This function performs power calculations for stepped wedge cluster randomized trials under different scenarios. The default setting assumes no time effect; to include time effects, set meanresponse_start and meanresponse_end0 to different values. Please refer to the documentation for guidance on incorporating time effects.
 }
 \examples{
 library(swdpwr)
